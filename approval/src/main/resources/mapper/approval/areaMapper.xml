@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssvet.approval.mapper.AreaMapper">
+    <select id="getAreaByUid" resultType="area">
+
+        select * from area_tb where aid = (select d_area_id from dept where
+        did = (select dept_id from user where uid = #{uid}))
+
+    </select>
+</mapper>

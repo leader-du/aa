@@ -1,0 +1,40 @@
+
+spring:
+  datasource:
+    druid:
+      #url: jdbc:mysql://111.61.127.69:13306/flow_db?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://49.232.61.185:3306/flow_db?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: lw123
+      initial-size: 5
+      max-active: 20
+      min-idle: 10
+      max-wait: 5000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+  mvc:
+    static-path-pattern: /static/**
+
+server:
+  port: 8081
+mybatis-plus:
+  mapper-locations: classpath:mapper/approval/*Mapper.xml
+  type-aliases-package: com.ssvet.approval.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jwt:
+  expiration: 1800000
+  secret: approval
+  header: accessToken
+
+
+upload:
+  path: D:/uploadImg
+
+

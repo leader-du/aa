@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssvet.approval.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.ssvet.approval.entity.User">
+        <id column="uid" property="id"/>
+        <result column="uname" property="uName"/>
+        <result column="ch_name" property="chName"/>
+        <result column="dept_id" property="deptId"/>
+    </resultMap>
+
+    <select id="selectListByRoleGrade" resultMap="userResultMap">
+        select u.* from user u left join user_role ur on ur.ur_user_Id=u.uid
+        left join role r  on r.role_id=ur.ur_role_id
+        where r.role_grade=#{roleGrade}
+        and u.uid &lt;&gt; #{currentUserId}
+        <if test="chName!=null and chName!=''">
+            and u.ch_name like concat("%",#{chName},"%");
+        </if>
+    </select>
+    <select id="getRoles" resultType="com.ssvet.approval.entity.Role">
+        select r.role_grade from role r left join user_role ur on ur.ur_role_id=r.role_id
+        left join user u  on u.uid=ur.ur_user_Id
+        where u.uid=#{id}
+    </select>
+    <select id="getRolesByUid" resultType="role">
+
+        select r.* from role r left join user_role ur on ur.ur_role_id=r.role_id
+        left join user u  on u.uid=ur.ur_user_Id
+        where u.uid=#{id}
+
+    </select>
+    <select id="selectLeaderList" resultMap="userResultMap">
+        select u.* from user u left join user_role ur on ur.ur_user_Id=u.uid
+        left join role r  on r.role_id=ur.ur_role_id
+        where r.role_grade>#{userMaxRoleGrade}
+        and r.role_grade>#{prevUserRoleGrade}
+        <if test="chName!=null and chName!=''">
+            and u.ch_name like concat("%",#{chName},"%")
+        </if>
+    </select>
+
+    <select id="getUserByChName" resultMap="userResultMap">
+
+        select * from user where  1 = 2
+
+        <if test="chName!=null and chName!=''">
+
+            or ch_name like concat("%",#{chName},"%")
+
+        </if>
+
+    </select>
+
+    <select id="getBaseManager" resultMap="userResultMap">
+
+        select u.* from user u,area_tb at,dept d,user_role ur,role r
+
+        where at.a_uid = #{uid}
+
+        and at.aid = d.d_area_id
+
+        and d.did = u.dept_id
+
+        and ur.ur_user_id = u.uid
+
+        and ur.ur_role_id = 6
+
+
+    </select>
+
+    <select id="getFuManager" resultMap="userResultMap">
+
+        select u.* from (select * from user where dept_id =
+        (select dept_id from user where uid = #{uid})) u,
+        dept d,user_role ur,role r  where ur.ur_user_Id = u.uid and ur.ur_role_id = 5
+
+    </select>
+
+</mapper>
